@@ -1,5 +1,5 @@
 import sqlite3
-conn = sqlite3.connect('db.sqlite')
+conn = sqlite3.connect('emaildb.sqlite')
 cur = conn.cursor()
 cur.execute('DROP TABLE IF EXISTS Counts')
 cur.execute('''
@@ -21,9 +21,12 @@ for line in fh:
     else:
         cur.execute('UPDATE Counts SET count = count + 1 WHERE email = ?',
                     (email,))
-    conn.commit()
 # https://www.sqlite.org/lang_select.html
+conn.commit()
 sqlstr = 'SELECT email, count FROM Counts ORDER BY count DESC LIMIT 10'
+suma = 0
 for row in cur.execute(sqlstr):
     print(str(row[0]), row[1])
+    suma += int(row[1])
+print(suma)
 cur.close()
